@@ -13,13 +13,27 @@ document.querySelectorAll(".add-to-cart").forEach((btn) => {
       productCard.querySelector(".price").textContent.replace("DT", "")
     );
 
-    cart.push({ name, price });
+    const qtyInput = productCard.querySelector(".qty-input");
+    const quantity = qtyInput ? parseInt(qtyInput.value) : 1;
+
+    // 👉 Vérifier si le produit existe déjà
+    const existing = cart.find((item) => item.name === name);
+
+    if (existing) {
+      // Augmenter la quantité
+      existing.quantity += quantity;
+      showNotification(`${existing.quantity} × "${name}" dans le panier.`);
+    } else {
+      // Ajouter un nouveau produit
+      cart.push({ name, price, quantity });
+      showNotification(`${quantity} × "${name}" ajouté(s) au panier !`);
+    }
+
     localStorage.setItem("cart", JSON.stringify(cart));
     updateCartDisplay();
-
-    showNotification(`Produit "${name}" ajouté au panier !`);
   });
 });
+
 //  SUPPRESSION PRODUIT
 function removeItem(index) {
   cart.splice(index, 1);
@@ -43,17 +57,67 @@ function updateCartDisplay() {
     row.classList.add("cart-row");
 
     row.innerHTML = `
-      <span class="cart-name">${item.name}</span>
-      <span class="cart-price">${item.price.toFixed(2)} DT</span>
-      <button class="cart-delete" onclick="confirmRemove(${index})">Supprimer</button>
-    `;
+  <span class="cart-name">${item.name}</span>
+
+  <div class="cart-qty">
+    <button class="qty-minus" data-index="${index}">−</button>
+    <span class="qty-value">${item.quantity}</span>
+    <button class="qty-plus" data-index="${index}">+</button>
+  </div>
+
+  <span class="cart-price">${(item.price * item.quantity).toFixed(2)} DT</span>
+
+  <button class="cart-delete" onclick="confirmRemove(${index})">Supprimer</button>
+`;
 
     container.appendChild(row);
-    total += item.price;
+    total += item.price * (item.quantity || 1);
   });
 
   totalEl.textContent = total.toFixed(2);
 }
+// Gestion + / -
+document.addEventListener("click", function (e) {
+  // Bouton +
+  if (e.target.classList.contains("qty-plus")) {
+    const index = e.target.dataset.index;
+    cart[index].quantity++;
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartDisplay();
+  }
+
+  // Bouton -
+  if (e.target.classList.contains("qty-minus")) {
+    const index = e.target.dataset.index;
+
+    if (cart[index].quantity > 1) {
+      cart[index].quantity--;
+    } else {
+      // Si quantité = 1 → confirmation suppression
+      confirmRemove(index);
+      return;
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartDisplay();
+  }
+});
+
+let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+document.querySelectorAll(".fav-btn").forEach((btn) => {
+  btn.addEventListener("click", function () {
+    const name = this.dataset.name;
+
+    // Évite les doublons
+    if (!favorites.includes(name)) {
+      favorites.push(name);
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      showNotification(`"${name}" ajouté aux favoris ❤️`);
+    } else {
+      showNotification(`"${name}" est déjà dans les favoris`, "#777");
+    }
+  });
+});
 
 //  NOTIFICATION
 function showNotification(message, bgColor = "#ff69b4") {
