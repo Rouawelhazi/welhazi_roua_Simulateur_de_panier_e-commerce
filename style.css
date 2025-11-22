@@ -664,6 +664,14 @@ body {
 #clearCartBtn:hover {
   background-color: #ff69b4;
 }
-
-
 /*Favoris*/
+/*Filtrage*/
+.category-card.active-cat {
+  border: 3px solid #ff0077;
+  transform: scale(1.05);
+  transition: 0.3s;
+}
+.card-main {
+  display: flex;
+}
+

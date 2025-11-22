@@ -155,7 +155,6 @@ document.getElementById("modalClose").addEventListener("click", () => {
   document.getElementById("confirmModal").style.display = "none";
 });
 /*Supprimer tout */
-
 document.getElementById("clearCartBtn").addEventListener("click", () => {
   if (cart.length === 0) {
     showNotification("Le panier est déjà vide !", "#555");
@@ -181,4 +180,43 @@ document.getElementById("modalYes").addEventListener("click", () => {
 
   deleteIndex = null;
   document.getElementById("confirmModal").style.display = "none";
+});
+//Filtrage
+const savedFilter = localStorage.getItem("selectedFilter") || "all";
+function applyFilter(filter) {
+  const products = document.querySelectorAll(".card-main");
+
+  products.forEach((product) => {
+    if (filter === "all" || product.classList.contains(filter)) {
+      product.style.display = "flex";
+    } else {
+      product.style.display = "none";
+    }
+  });
+
+  // Effet visuel
+  document
+    .querySelectorAll(".category-card")
+    .forEach((c) => c.classList.remove("active-cat"));
+  const activeCard = document.querySelector(
+    `.category-card[data-filter="${filter}"]`
+  );
+  if (activeCard) activeCard.classList.add("active-cat");
+}
+applyFilter(savedFilter);
+//  FILTRAGE + SAUVEGARDE LOCALSTORAGE
+document.querySelectorAll(".category-card").forEach((card) => {
+  card.addEventListener("click", () => {
+    const filter = card.getAttribute("data-filter");
+    applyFilter(filter);
+    localStorage.setItem("selectedFilter", filter);
+  });
+});
+
+// Empêcher le rechargement de la page pour les boutons Commander
+document.querySelectorAll(".category-btn").forEach((btn) => {
+  btn.addEventListener("click", (event) => {
+    event.preventDefault();
+    console.log("Commande cliquée sans rechargement !");
+  });
 });
