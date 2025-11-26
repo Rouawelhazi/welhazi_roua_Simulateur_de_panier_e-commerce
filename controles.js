@@ -304,8 +304,24 @@ showAllBtn.addEventListener("click", () => {
   });
 });
 
-document.querySelectorAll('.disabled-link').forEach(link => {
-  link.addEventListener('click', (e) => {
+document.querySelectorAll(".disabled-link").forEach((link) => {
+  link.addEventListener("click", (e) => {
     e.preventDefault();
   });
 });
+//preloader
+// Duration in milliseconds
+const loadingDuration = 1500; 
+
+// Show preloader immediately
+const preloader = document.getElementById("preloader");
+preloader.style.display = "flex"; // make sure it is visible
+
+// Hide preloader after fixed duration
+setTimeout(() => {
+  preloader.style.opacity = "0";
+  preloader.style.transition = "opacity 0.5s ease";
+  setTimeout(() => {
+    preloader.style.display = "none";
+  }, 500); // match fade duration
+}, loadingDuration);
