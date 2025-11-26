@@ -303,3 +303,9 @@ showAllBtn.addEventListener("click", () => {
     prod.style.display = "block";
   });
 });
+
+document.querySelectorAll('.disabled-link').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+  });
+});
