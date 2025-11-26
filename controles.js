@@ -102,22 +102,84 @@ document.addEventListener("click", function (e) {
     updateCartDisplay();
   }
 });
-
-let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+//favoris
 document.querySelectorAll(".fav-btn").forEach((btn) => {
   btn.addEventListener("click", function () {
     const name = this.dataset.name;
 
-    // Évite les doublons
+    favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
     if (!favorites.includes(name)) {
       favorites.push(name);
       localStorage.setItem("favorites", JSON.stringify(favorites));
+
       showNotification(`"${name}" ajouté aux favoris ❤️`);
+      loadFavoriteSlider(); // 🔥 Met le slider à jour instantanément
     } else {
       showNotification(`"${name}" est déjà dans les favoris`, "#777");
     }
   });
 });
+
+//slider
+function loadFavoriteSlider() {
+  let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+  const slider = document.getElementById("favoritesSlider");
+  slider.innerHTML = "";
+
+  if (favorites.length === 0) {
+    slider.innerHTML = '<p class="no-favs">Aucun favori pour le moment.</p>';
+    return;
+  }
+
+  favorites.forEach((favName, index) => {
+    // Find matching product card
+    const productCard = [...document.querySelectorAll(".product")].find(
+      (card) =>
+        card.querySelector("h2") &&
+        card.querySelector("h2").textContent.trim() === favName
+    );
+
+    if (productCard) {
+      const imgSrc = productCard.querySelector("img").src;
+
+      const item = document.createElement("div");
+      item.classList.add("fav-item");
+      item.innerHTML = `
+        <img src="${imgSrc}" alt="${favName}">
+        <h3>${favName}</h3>
+        <button class="delete-one-btn" data-index="${index}">Supprimer</button>
+      `;
+
+      slider.appendChild(item);
+    }
+  });
+
+  // 🔥 Handle delete buttons
+  document.querySelectorAll(".delete-one-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+      const index = btn.dataset.index;
+
+      favorites.splice(index, 1); // remove from array
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+
+      loadFavoriteSlider(); // refresh view
+
+      showNotification("Favori supprimé ❌");
+    });
+  });
+}
+// Slider navigation
+document.getElementById("prevFav").addEventListener("click", () => {
+  document.getElementById("favoritesSlider").scrollLeft -= 200;
+});
+
+document.getElementById("nextFav").addEventListener("click", () => {
+  document.getElementById("favoritesSlider").scrollLeft += 200;
+});
+
+window.addEventListener("load", loadFavoriteSlider);
 
 //  NOTIFICATION
 function showNotification(message, bgColor = "#ff69b4") {
@@ -130,6 +192,18 @@ function showNotification(message, bgColor = "#ff69b4") {
     notification.style.display = "none";
   }, 2500);
 }
+//favoris delete all:
+document.getElementById("deleteAllFavs").addEventListener("click", () => {
+  favorites = [];
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+
+  loadFavoriteSlider(); // 🔥 Refresh instantané
+
+  if (typeof showNotification === "function") {
+    showNotification("Tous les favoris ont été supprimés 🗑️");
+  }
+});
+
 //  MODAL DE CONFIRMATION
 function confirmRemove(index) {
   deleteIndex = index;
@@ -218,5 +292,14 @@ document.querySelectorAll(".category-btn").forEach((btn) => {
   btn.addEventListener("click", (event) => {
     event.preventDefault();
     console.log("Commande cliquée sans rechargement !");
+  });
+});
+//Filtrage : affichage de tout
+const showAllBtn = document.getElementById("showAll");
+const products = document.querySelectorAll(".product");
+
+showAllBtn.addEventListener("click", () => {
+  products.forEach((prod) => {
+    prod.style.display = "block";
   });
 });
