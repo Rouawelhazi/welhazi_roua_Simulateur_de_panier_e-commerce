@@ -984,4 +984,96 @@ body {
   border-top: 1px solid #333;
 
 }
+/*formulaire*/
 
+.newsletter-container {
+  background: #000;
+  position: relative;
+  left:12%;
+  padding: 25px 25px; /* moins de padding vertical */
+  border-radius: 20px;
+  max-width: 850px; /* plus large horizontalement */
+  width: 95%;
+  box-shadow: 0 0 25px rgba(255, 0, 136, 0.4);
+  margin: 20px;
+}
+
+.newsletter-container h2 {
+  text-align: center;
+  color: #ff0088;
+  margin-bottom: 25px; /* moins de marge pour réduire hauteur */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 5px 10px; /* padding plus petit pour réduire hauteur */
+  vertical-align: top;
+}
+
+td label {
+  display: block;
+  margin-bottom: 4px; /* moins de marge pour réduire hauteur */
+  font-weight: bold;
+  color: #fff;
+}
+
+input[type="text"],
+input[type="email"],
+select,
+textarea {
+  width: 100%;
+  padding: 8px; /* champs moins hauts */
+  border-radius: 6px;
+  border: none;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #ff0088;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 60px; /* moins de hauteur */
+}
+
+input[type="submit"] {
+  background: #ff0088;
+  color: #fff;
+  border: none;
+  padding: 12px 20px; /* moins haut */
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background 0.3s;
+  width: 100%;
+  margin-top: 15px;
+}
+
+input[type="submit"]:hover {
+  background: #ff66b2;
+}
+
+/* Pour aligner horizontalement les champs principaux */
+.row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px; /* moins de marge verticale */
+}
+
+.row td {
+  flex: 1;
+}
+
+/* Espaces entre les champs larges */
+.full-width {
+  margin-bottom: 10px; /* moins de marge verticale */
+}

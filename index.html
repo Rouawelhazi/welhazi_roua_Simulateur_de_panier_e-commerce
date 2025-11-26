@@ -453,7 +453,54 @@
     <button id="nextFav" class="nav-btn">▶</button>
   </div>
 </div>
-
+<div class="newsletter-container">
+  <h2>Inscrivez-vous à notre Newsletter</h2>
+  <form action="#" method="post">
+      <table>
+          <tr>
+              <td>
+                  <label for="prenom" >Prénom</label>
+                  <input type="text" id="prenom" name="prenom" placeholder="Prénom :"required>
+              </td>
+              <td>
+                  <label for="nom" >Nom</label>
+                  <input type="text" id="nom" name="nom" placeholder="Nom :"required>
+              </td>
+          </tr>
+          <tr>
+              <td colspan="2">
+                  <label for="email" >Adresse e-mail</label>
+                  <input type="email" placeholder="Email : "id="email" name="email" required>
+              </td>
+          </tr>
+          <tr>
+              <td colspan="2">
+                  <label for="ville">Ville</label>
+                  <select id="ville" name="ville" required>
+                      <option value="">--Choisissez votre ville--</option>
+                      <option value="tunis">Tunis</option>
+                      <option value="sfax">Sfax</option>
+                      <option value="nabeul">Nabeul</option>
+                      <option value="mednine">Mednine</option>
+                      <option value="monastir">Monastir</option>
+                      <option value="bizerte">Bizerte</option>
+                  </select>
+              </td>
+          </tr>
+          <tr>
+              <td colspan="2">
+                  <label for="message">Message</label>
+                  <textarea id="message" name="message" placeholder="Votre message..."></textarea>
+              </td>
+          </tr>
+          <tr>
+              <td colspan="2">
+                  <input type="submit" value="S'inscrire">
+              </td>
+          </tr>
+      </table>
+  </form>
+</div>
 
 <footer class="footer" id="footerid">
   <div class="footer-container">
