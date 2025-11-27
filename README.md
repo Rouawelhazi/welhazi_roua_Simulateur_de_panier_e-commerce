@@ -56,4 +56,4 @@ ________________________________________
 •	Tests réguliers dans la console pour corriger des erreurs DOM
 •	Séparation du code en blocs (filtrage, panier, favoris…) pour éviter les conflits
 
-Add README
+
