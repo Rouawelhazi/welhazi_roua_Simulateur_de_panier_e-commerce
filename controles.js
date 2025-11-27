@@ -102,107 +102,6 @@ document.addEventListener("click", function (e) {
     updateCartDisplay();
   }
 });
-//favoris
-document.querySelectorAll(".fav-btn").forEach((btn) => {
-  btn.addEventListener("click", function () {
-    const name = this.dataset.name;
-
-    favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-
-    if (!favorites.includes(name)) {
-      favorites.push(name);
-      localStorage.setItem("favorites", JSON.stringify(favorites));
-
-      showNotification(`"${name}" ajouté aux favoris ❤️`);
-      loadFavoriteSlider(); // 🔥 Met le slider à jour instantanément
-    } else {
-      showNotification(`"${name}" est déjà dans les favoris`, "#777");
-    }
-  });
-});
-
-//slider
-function loadFavoriteSlider() {
-  let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-  const slider = document.getElementById("favoritesSlider");
-  slider.innerHTML = "";
-
-  if (favorites.length === 0) {
-    slider.innerHTML = '<p class="no-favs">Aucun favori pour le moment.</p>';
-    return;
-  }
-
-  favorites.forEach((favName, index) => {
-    // Find matching product card
-    const productCard = [...document.querySelectorAll(".product")].find(
-      (card) =>
-        card.querySelector("h2") &&
-        card.querySelector("h2").textContent.trim() === favName
-    );
-
-    if (productCard) {
-      const imgSrc = productCard.querySelector("img").src;
-
-      const item = document.createElement("div");
-      item.classList.add("fav-item");
-      item.innerHTML = `
-        <img src="${imgSrc}" alt="${favName}">
-        <h3>${favName}</h3>
-        <button class="delete-one-btn" data-index="${index}">Supprimer</button>
-      `;
-
-      slider.appendChild(item);
-    }
-  });
-
-  // 🔥 Handle delete buttons
-  document.querySelectorAll(".delete-one-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-      const index = btn.dataset.index;
-
-      favorites.splice(index, 1); // remove from array
-      localStorage.setItem("favorites", JSON.stringify(favorites));
-
-      loadFavoriteSlider(); // refresh view
-
-      showNotification("Favori supprimé ❌");
-    });
-  });
-}
-// Slider navigation
-document.getElementById("prevFav").addEventListener("click", () => {
-  document.getElementById("favoritesSlider").scrollLeft -= 200;
-});
-
-document.getElementById("nextFav").addEventListener("click", () => {
-  document.getElementById("favoritesSlider").scrollLeft += 200;
-});
-
-window.addEventListener("load", loadFavoriteSlider);
-
-//  NOTIFICATION
-function showNotification(message, bgColor = "#ff69b4") {
-  const notification = document.getElementById("notification");
-  notification.textContent = message;
-  notification.style.backgroundColor = bgColor;
-  notification.style.display = "block";
-
-  setTimeout(() => {
-    notification.style.display = "none";
-  }, 2500);
-}
-//favoris delete all:
-document.getElementById("deleteAllFavs").addEventListener("click", () => {
-  favorites = [];
-  localStorage.setItem("favorites", JSON.stringify(favorites));
-
-  loadFavoriteSlider(); // 🔥 Refresh instantané
-
-  if (typeof showNotification === "function") {
-    showNotification("Tous les favoris ont été supprimés 🗑️");
-  }
-});
 
 //  MODAL DE CONFIRMATION
 function confirmRemove(index) {
@@ -278,7 +177,7 @@ function applyFilter(filter) {
   if (activeCard) activeCard.classList.add("active-cat");
 }
 applyFilter(savedFilter);
-//  FILTRAGE + SAUVEGARDE LOCALSTORAGE
+//  FILTRAGE
 document.querySelectorAll(".category-card").forEach((card) => {
   card.addEventListener("click", () => {
     const filter = card.getAttribute("data-filter");
@@ -309,19 +208,116 @@ document.querySelectorAll(".disabled-link").forEach((link) => {
     e.preventDefault();
   });
 });
-//preloader
-// Duration in milliseconds
-const loadingDuration = 1500; 
+//favoris
+document.querySelectorAll(".fav-btn").forEach((btn) => {
+  btn.addEventListener("click", function () {
+    const name = this.dataset.name;
 
-// Show preloader immediately
+    favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+    if (!favorites.includes(name)) {
+      favorites.push(name);
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+
+      showNotification(`"${name}" ajouté aux favoris ❤️`);
+      loadFavoriteSlider();
+    } else {
+      showNotification(`"${name}" est déjà dans les favoris`, "#777");
+    }
+  });
+});
+
+//slider
+function loadFavoriteSlider() {
+  let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+  const slider = document.getElementById("favoritesSlider");
+  slider.innerHTML = "";
+
+  if (favorites.length === 0) {
+    slider.innerHTML = '<p class="no-favs">Aucun favori pour le moment.</p>';
+    return;
+  }
+
+  favorites.forEach((favName, index) => {
+    const productCard = [...document.querySelectorAll(".product")].find(
+      (card) =>
+        card.querySelector("h2") &&
+        card.querySelector("h2").textContent.trim() === favName
+    );
+
+    if (productCard) {
+      const imgSrc = productCard.querySelector("img").src;
+
+      const item = document.createElement("div");
+      item.classList.add("fav-item");
+      item.innerHTML = `
+        <img src="${imgSrc}" alt="${favName}">
+        <h3>${favName}</h3>
+        <button class="delete-one-btn" data-index="${index}">Supprimer</button>
+      `;
+
+      slider.appendChild(item);
+    }
+  });
+
+  // 🔥 Handle delete buttons
+  document.querySelectorAll(".delete-one-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+      const index = btn.dataset.index;
+
+      favorites.splice(index, 1); // remove from array
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+
+      loadFavoriteSlider(); // refresh view
+
+      showNotification("Favori supprimé ❌");
+    });
+  });
+}
+// Slider navigation
+document.getElementById("prevFav").addEventListener("click", () => {
+  document.getElementById("favoritesSlider").scrollLeft -= 200;
+});
+
+document.getElementById("nextFav").addEventListener("click", () => {
+  document.getElementById("favoritesSlider").scrollLeft += 200;
+});
+
+window.addEventListener("load", loadFavoriteSlider);
+
+//  NOTIFICATION
+function showNotification(message, bgColor = "#ff69b4") {
+  const notification = document.getElementById("notification");
+  notification.textContent = message;
+  notification.style.backgroundColor = bgColor;
+  notification.style.display = "block";
+
+  setTimeout(() => {
+    notification.style.display = "none";
+  }, 2500);
+}
+//favoris delete all:
+document.getElementById("deleteAllFavs").addEventListener("click", () => {
+  favorites = [];
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+
+  loadFavoriteSlider(); // 🔥 Refresh instantané
+
+  if (typeof showNotification === "function") {
+    showNotification("Tous les favoris ont été supprimés 🗑️");
+  }
+});
+
+//effet :téléchargement de la page
+// durée en millisecondes
+const loadingDuration = 1500;
 const preloader = document.getElementById("preloader");
-preloader.style.display = "flex"; // make sure it is visible
-
-// Hide preloader after fixed duration
+preloader.style.display = "flex";
 setTimeout(() => {
   preloader.style.opacity = "0";
   preloader.style.transition = "opacity 0.5s ease";
   setTimeout(() => {
     preloader.style.display = "none";
-  }, 500); // match fade duration
+  }, 500);
 }, loadingDuration);
